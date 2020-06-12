@@ -11,9 +11,6 @@ body {
     flex-direction: column;
 }
 
-.head{
-    background-color: #630303;
-}
 .bb{
     color:blue;
 }
@@ -40,24 +37,4 @@ body {
     width: 65px;
     margin-left: auto;
     margin-right: auto;
-}
-.footer-row{
-    background-color: #630303;
-}
-.footer-title{
-    color: #ffc107;
-}
-.footer-pad{
-    margin-left: 10%;
-    margin-right: 10%;
-}
-.footer-content{
-    color: white;
-    text-align: justify;
-}
-.footer-content ul{
-    list-style-type: none;
-}
-.footer-content ul li:hover {
-    color: #ffc107;
 }
