@@ -38,7 +38,7 @@ class Employee(db.Model):
         return generate_password_hash(password)
 
     def check_password(self, password):
-        return check_password_hash(password)
+        return check_password_hash(self.password, password)
 
     def __repr__(self):
         return '{employee_id} -> {username}'.format(employee_id=self.employee_id, username=self.username)
