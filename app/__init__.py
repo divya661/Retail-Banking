@@ -41,4 +41,4 @@ def site_root():
 
     if employee_id == False or username == False:
         return redirect(url_for('auth.login'))
-    return '<h1>You are logged in as: {username}'.format(username=username)
+    return '<h1>You are logged in as: {username} <a href="/auth/logout">logout</a>'.format(username=username)

@@ -52,3 +52,7 @@ def signup():
             flash(value_error.message, 'error')
     return render_template('signup.html')
 
+@bp_auth.route('/logout', methods=['GET', 'POST'])
+def logout():
+    session.clear()
+    return redirect(url_for('site_root'))
