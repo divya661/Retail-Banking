@@ -36,7 +36,7 @@ from .mod_customer import bp_customer, Customer
 db.create_all()
 
 app.register_blueprint(bp_auth, url_prefix='/auth')
-app.register_blueprint(bp_customer_signup, url_prefix='/customer')
+app.register_blueprint(bp_customer, url_prefix='/customer')
 
 @app.route('/')
 def site_root():

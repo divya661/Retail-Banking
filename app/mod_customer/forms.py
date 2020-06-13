@@ -2,7 +2,6 @@ from flask_wtf import Form
 from wtforms.validators import DataRequired, Length,ValidationError
 from wtforms import StringField, IntegerField, TextAreaField, SubmitField,  SelectField
 from .models import Customer
-from .exceptions import Invalid_SSN_Id
 
 class CustomerForm(Form):
     customer_ssn_id  = IntegerField(u"Candidate SSN ID ",validators=[DataRequired(),Length(min=9,max=9)])
