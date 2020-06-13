@@ -3,12 +3,13 @@ from .exceptions import Invalid_SSN_Id
 from .form import CustomerForm
 from .models import Customer
 from app import db
-bp_customer_signup = Blueprint(
-    'customer_signup', __name__, template_folder='templates', static_folder='static'
+
+bp_customer = Blueprint(
+    'customer', __name__, template_folder='templates', static_folder='static'
 )
 
 
-@bp_customer_signup.route('/signup', methods=['POST','GET'])
+@bp_customer.route('/signup', methods=['POST','GET'])
 def signup():
     if session.get('customer_id'):
         return redirect(url_for('site_root'))
