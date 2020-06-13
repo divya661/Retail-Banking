@@ -1,3 +1,13 @@
+html {
+    height: 100% !important;
+}
+
+body {
+    height: 100% !important;
+    display: flex;
+    flex-direction: column;
+}
+
 .error {
     display: block;
     padding: 15px;
@@ -8,6 +18,11 @@
 
 .head{
     background-color: #630303;
+    height: 20%;
+}
+
+#content {
+    height: 85%;
 }
 
 .footer-row{
