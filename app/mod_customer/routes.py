@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, session, url_for, redirect
 from .exceptions import InvalidSSNId
-from .form import CustomerForm
+from .forms import CustomerForm
 from .models import Customer
 from app import db
 
