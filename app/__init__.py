@@ -1,5 +1,5 @@
 import os
-from flask import Flask, session, redirect, url_for
+from flask import Flask, session, redirect, url_for,render_template
 from flask_sqlalchemy import SQLAlchemy
 
 
@@ -25,14 +25,18 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://{username}:{password}@{server}/
     server=app.config['DB_SERVER'],  # FROM CONFIG
     database=app.config['DB_DATABASE'],  # FROM CONFIG
 )
-
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
 
 
 from .mod_auth import bp_auth, Employee
+from .mod_create_customer import bp_customer_signup, Customer
 
+db.drop_all()
 db.create_all()
+
 app.register_blueprint(bp_auth, url_prefix='/auth')
+app.register_blueprint(bp_customer_signup, url_prefix='/customer_signup')
 
 @app.route('/')
 def site_root():
@@ -41,4 +45,8 @@ def site_root():
 
     if employee_id == False or username == False:
         return redirect(url_for('auth.login'))
-    return '<h1>You are logged in as: {username} <a href="/auth/logout">logout</a>'.format(username=username)
+    return redirect(url_for('customer_signup.signup'))
+    # return '<h1>You are logged in as: {username} <a href="/auth/logout">logout</a>'.format(username=username)
+
+
+
