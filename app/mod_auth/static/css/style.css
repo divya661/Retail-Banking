@@ -1,0 +1,40 @@
+html, body {
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.bb{
+    color:blue;
+}
+.login{
+    border: 1px solid #676363;
+    max-width: 500px;
+    min-width: 200px;
+    margin-left: auto;
+    margin-right: auto; 
+}
+.title{
+    background-color: #676363;
+    color: white;
+    padding: 10px;
+}
+.credential{
+    padding: 10px;
+}
+.login-btn{
+    margin-right: auto;
+    margin-left: auto;
+}
+.aa{
+    width: 65px;
+    margin-left: auto;
+    margin-right: auto;
+}
