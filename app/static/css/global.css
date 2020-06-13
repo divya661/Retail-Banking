@@ -16,6 +16,14 @@ body {
     border-radius: 5px;
 }
 
+.success {
+    display: block;
+    padding: 15px;
+    background: #2cb978;
+    color: white;
+    border-radius: 5px;
+}
+
 .head{
     background-color: #630303;
     height: 20%;
