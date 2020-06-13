@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, flash, session, url_for, redirect
-from .exceptions import Invalid_SSN_Id
+from .exceptions import InvalidSSNId
 from .form import CustomerForm
 from .models import Customer
 from app import db
