@@ -1,4 +1,5 @@
-import random, string
+import random
+import string
 from app import db
 
 
@@ -14,7 +15,9 @@ def random_nine_digit_id():
 class Customer(db.Model):
     __tablename__ = 'customer'
 
-    customer_id = db.Column(db.String(20), primary_key=True)
+    customer_id = db.Column(
+        db.String(20), primary_key=True, default=random_nine_digit_id
+    )
 
     customer_ssn_id = db.Column(
         db.String(10),  nullable=False, unique=True
