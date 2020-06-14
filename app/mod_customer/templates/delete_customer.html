@@ -1,4 +1,4 @@
-<!--{% extends "common/layout.html" %}
+{% extends "common/layout.html" %}
 
 {% block title %}
 
@@ -8,7 +8,6 @@
 <link rel="stylesheet" href="{{url_for('customer.static', filename='css/delete_customer.css')}}">
 {% endblock %}
 {%block content%}
--->
 
 
 <div class="container centered">
@@ -87,21 +86,10 @@
     </div>
 </div>
 
-<!--
+
 {% endblock %}
--->
+
 
 {% block js %}
-<script>
-function check(){
-var bt = document.getElementById('submit');
-        if (customer_ssn_id.value != '' || customer_id.value!='' || customer_age.value!=''||customer_name!=''||customer_address!='') {
-            bt.disabled = true;
-        }
-        else {
-            bt.disabled = false;
-        }
 
-}
-</script>
 {% endblock %}
