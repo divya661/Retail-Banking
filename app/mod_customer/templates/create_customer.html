@@ -1,5 +1,5 @@
-<!--{% extends "common/layout.html" %}-->
-<!--
+{% extends "common/layout.html" %}
+
 {% block title %}
 Home - Create Customer
 {% endblock %}
@@ -10,7 +10,7 @@ Home - Create Customer
 
 
 {%block content%}
--->
+
 <div class="centered">
   {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
@@ -115,11 +115,10 @@ Home - Create Customer
     </fieldset>
   </form>
 </div>
-<!--
+
 {% endblock %}
 
 
 {% block js %}
 <script src="{{url_for('customer.static', filename='js/create_customer.js')}}"></script>
 {% endblock %}
--->
