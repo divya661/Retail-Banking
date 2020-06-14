@@ -1,7 +1,7 @@
 {
     "DEBUG": true,
     "DB_USERNAME": "root",
-    "DB_PASSWORD": "",
+    "DB_PASSWORD": "Password@123",
     "DB_SERVER": "localhost",
     "DB_DATABASE": "banking_application"
 }
