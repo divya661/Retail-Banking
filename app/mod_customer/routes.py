@@ -21,3 +21,18 @@ def signup():
         return redirect(url_for("customer.signup"))
     return render_template("create_customer.html", title="Create Customer Account", form=form)
 
+@bp_customer.route('/status')
+def status():
+    entries=Customer.query.filter_by().all()
+    
+    return render_template("customer_status.html",entries=entries)
+
+@bp_customer.route('customer/status/<string:status_id>',methods=['GET'])
+def details(status_id):
+    detail=Customer.query.filter_by(customer_id=status_id).first()
+    return render_template("customer_details.html",detail=detail)
+
+
+
+
+    return render_template("customer_details.html")

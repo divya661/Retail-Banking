@@ -1,6 +1,7 @@
 from app import db
 from .models import Customer
 from .exceptions import InvalidSSNId
+from datetime import datetime
 
 
 def create_customer(form):
@@ -21,7 +22,7 @@ def create_customer(form):
         raise InvalidSSNId()
 
     customer = Customer(customer_ssn_id=customer_ssn_id, customer_name=customer_name, customer_age=customer_age,
-                        customer_address=customer_address, customer_state=customer_state, customer_city=customer_city)
+                        customer_address=customer_address, customer_state=customer_state, customer_city=customer_city,customer_created_time=datetime.now())
 
     db.session.add(customer)
     db.session.commit()
