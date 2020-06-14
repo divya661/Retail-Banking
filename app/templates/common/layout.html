@@ -1,20 +1,24 @@
+
 <!doctype html>
 <html lang="en">
 
 <head>
+
   <!-- Required meta tags -->
-  <meta charset="utf-8">
+ <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <!-- Bootstrap CSS -->
+
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
     integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
   <link rel="stylesheet" href="{{url_for('static', filename='css/global.css')}}">
+
   {% block css %}{% endblock %}
   <title>{% block title %}{% endblock %}</title>
 
-</head>
 
+</head>
 <body>
   <div class="head">
     <a class="navbar-brand text-light mx-5" href="#">
@@ -83,10 +87,10 @@
           </li>
         </ul>
       </div>
-  </div>
   </nav>
   </div>
-  <div id='content'>
+  <div class="flex-wrapper">
+      <div id='content'>
     {% block content %}
     {% endblock %}
   </div>
@@ -140,9 +144,10 @@
           <span>Address: Corporater Office, building No.- H-104</span>
           <span>Noida Sector-62, Uttar Pradesh-203242</span>
         </div>
-
+      </div>
       </div>
   </footer>
+</div>
 
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -157,5 +162,4 @@
     crossorigin="anonymous"></script>
   {% block js %}{% endblock %}
 </body>
-
 </html>

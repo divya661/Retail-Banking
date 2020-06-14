@@ -7,7 +7,12 @@ body {
     display: flex;
     flex-direction: column;
 }
-
+.flex-wrapper{
+   display:flex;
+   min-height:100vh;
+   flex-direction:column;
+   justify-content:space-between;
+}
 .error {
     display: block;
     padding: 15px;
@@ -30,10 +35,16 @@ body {
 }
 
 #content {
-    height: 85%;
+   min-height: 100%;
+   margin-bottom:-50px;
 }
 
 .footer-row{
+     position:absolute;
+     bottom:0;
+     width:100%;
+
+    display:inline;
     background-color: #630303;
 }
 .footer-title{
