@@ -19,11 +19,10 @@ if app.config['ENV'] == 'production':
 app.config.from_json(CONFIG_FILE)
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://{username}:{password}@{server}/{database}'.format(
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://{username}:{password}@{server}'.format(
     username=app.config['DB_USERNAME'],  # FROM CONFIG
     password=app.config['DB_PASSWORD'],  # FROM CONFIG
     server=app.config['DB_SERVER'],  # FROM CONFIG
-    database=app.config['DB_DATABASE'],  # FROM CONFIG
 )
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
@@ -34,6 +33,8 @@ from .mod_customer import bp_customer, Customer
 from .mod_account import bp_account, Account, AccountStatus
 
 # db.drop_all()
+db.engine.execute('CREATE DATABASE IF NOT EXISTS banking_application')
+db.engine.execute('USE {database}'.format(database=app.config['DB_DATABASE']))
 db.create_all()
 
 app.register_blueprint(bp_auth, url_prefix='/auth')
