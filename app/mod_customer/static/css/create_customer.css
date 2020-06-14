@@ -42,8 +42,13 @@ input[type=reset] {
   padding-left: 100px;
 
 }
-
-
+.parent{
+display:inline-flex;
+flex-direction:row;
+}
+.error-message{
+color:red;
+}
 .col-25 {
   float: left;
   width: 25%;
