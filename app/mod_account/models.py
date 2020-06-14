@@ -1,4 +1,5 @@
-import string, random
+import string
+import random
 from datetime import datetime
 from app import db
 from .exceptions import InvalidAccountType
@@ -41,6 +42,7 @@ class Account(db.Model):
         self.account_type = account_type
         self.account_balance = int(account_balance)
 
+
 class AccountStatus(db.Model):
     __tablename__ = 'account_status'
 
@@ -77,6 +79,6 @@ class AccountStatus(db.Model):
         self.status = status
         self.message = message
         self.update_timestamp()
-    
+
     def update_timestamp(self):
         self.last_updated = datetime.utcnow()
