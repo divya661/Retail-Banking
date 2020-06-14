@@ -15,7 +15,7 @@
 
 </head>
 
-<body>
+<body onload="{% block onload %} {% endblock %}">
   <div class="head">
     <a class="navbar-brand text-light mx-5" href="#">
       <h1>FedChoice Bank</h1>
@@ -50,8 +50,8 @@
               Account Management
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Create Account</a>
-              <a class="dropdown-item" href="#">Delete Account</a>
+              <a class="dropdown-item" href="{{ url_for('account.create_account') }}">Create Account</a>
+              <a class="dropdown-item" href="{{ url_for('account.delete_account') }}">Delete Account</a>
             </div>
           </li>
           <li class="nav-item dropdown">
@@ -61,7 +61,7 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="#">Customer Status</a>
-              <a class="dropdown-item" href="#">Account Status</a>
+              <a class="dropdown-item" href="{{ url_for('account.show_status') }}">Account Status</a>
               <a class="dropdown-item" href="#">Customer Search</a>
               <a class="dropdown-item" href="#">Account Search</a>
             </div>

@@ -1,0 +1,55 @@
+{% extends "common/layout.html" %}
+
+{% block title %}
+Account Status
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('customer.static', filename='css/create_customer.css')}}">
+{% endblock %}
+
+
+{%block content%}
+
+<h2 style="text-align: center; padding: 2rem;">Account Status</h2>
+<div class="container centered">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul class="flashes">
+        {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    <table class='table'>
+        <thead>
+            <th>Customer ID</th>
+            <th>Account ID</th>
+            <th>Account Type</th>
+            <th>Account Status</th>
+            <th>Message</th>
+            <th>Last Updated</th>
+            <th>Operations</th>
+        </thead>
+        <tbody>
+            {% for status in all_statuses %}
+            <tr>
+                <td>{{ status[0] }}</td>
+                <td>{{ status[1] }}</td>
+                <td>{{ status[2] }}</td>
+                <td>{{ status[3] }}</td>
+                <td>{{ status[4] }}</td>
+                <td>{{ status[5] }}</td>
+                <td><a href="{{ url_for('account.show_status') }}">Refresh</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script src="{{url_for('customer.static', filename='js/create_customer.js')}}"></script>
+{% endblock %}

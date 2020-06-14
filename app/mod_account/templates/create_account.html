@@ -1,0 +1,51 @@
+{% extends "common/layout.html" %}
+
+{% block title %}
+Home - Create Customer
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('customer.static', filename='css/create_customer.css')}}">
+{% endblock %}
+
+
+{%block content%}
+
+<h2 style="text-align: center; padding: 2rem;">Create Account</h2>
+<div class="container centered">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul class="flashes">
+        {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    <form action="{{ url_for('account.create_account') }}" method="post">
+        <div class="row">
+            <label for="customer_id">Customer ID: <sup class="required">*</sup></label>
+            <input id='customer_id' type='text' name='customer_id' required minlength="9" maxlength="9">
+        </div>
+        <div class="row">
+            <label for="account_type">Account type: <sup class="required">*</sup></label>
+            <select id='account_type' name="account_type" required>
+                <option value="savings" selected>Savings</option>
+                <option value="current">Current</option>
+            </select>
+        </div>
+        <div class="row">
+            <label for="account_balance">Deposit Amount: <sup class="required">*</sup></label>
+            <input id='account_balance' type="number" name='account_balance' required>
+        </div>
+        <div class="row row-center">
+            <input type="submit" value="Submit">
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+
+{% block js %}
+<script src="{{url_for('customer.static', filename='js/create_customer.js')}}"></script>
+{% endblock %}

@@ -24,9 +24,27 @@ body {
     border-radius: 5px;
 }
 
+table, th, td {
+    border: 1px solid black;
+}
+
+.required {
+    color: red;
+}
+
 .head{
     background-color: #630303;
     height: 20%;
+}
+
+.row {
+    display: flex;
+    padding: 0.5rem;
+}
+
+.row-center {
+    justify-content: center;
+    align-items: center;
 }
 
 #content {

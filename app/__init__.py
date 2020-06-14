@@ -31,12 +31,14 @@ db = SQLAlchemy(app)
 
 from .mod_auth import bp_auth, Employee
 from .mod_customer import bp_customer, Customer
+from .mod_account import bp_account, Account, AccountStatus
 
 # db.drop_all()
 db.create_all()
 
 app.register_blueprint(bp_auth, url_prefix='/auth')
 app.register_blueprint(bp_customer, url_prefix='/customer')
+app.register_blueprint(bp_account, url_prefix='/account')
 
 @app.route('/')
 def site_root():
