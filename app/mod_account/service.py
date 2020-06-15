@@ -1,6 +1,7 @@
 from app import db
+from app.mod_customer import Customer
 from .models import Account, AccountStatus
-from .exceptions import NoSuchAccount, AccountAlreadyExists
+from .exceptions import NoSuchAccount, AccountAlreadyExists, CustomerDoesNotExist
 
 STATUS_PENDING = 'pending'
 STATUS_ACTIVE = 'active'
@@ -44,6 +45,14 @@ def create_customer_account(customer_id, account_type, account_balance):
     message = MESSAGES['ACC_CREATION_COMPLETE']
     if customer_id == False or account_type == False or account_balance == False:
         raise ValueError('Value not provided for one of the required fields')
+
+    customer_exists = Customer.query.filter_by(
+        customer_id=customer_id,
+        archived=False,
+    ).first()
+
+    if customer_exists is None:
+        raise CustomerDoesNotExist(customer_id)
 
     account_exists = Account.query.filter_by(
         customer_id=customer_id,
