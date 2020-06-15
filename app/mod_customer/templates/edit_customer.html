@@ -1,0 +1,107 @@
+{% extends "common/layout.html" %}
+
+{% block title %}
+Edit customer
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('customer.static', filename='css/create_customer.css')}}">
+{% endblock %}
+
+{% block onload %}
+getCustomerDetails({{ json_customers }})
+{% endblock %}
+
+{%block content%}
+
+<h2 style="text-align: center; padding: 2rem;">Edit customer account</h2>
+<div class="container centered">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul class="flashes">
+        {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    <form action="{{ url_for('customer.edit') }}" method="post">
+        <div class="row">
+            <label for="customer_ssn_id">Customer SSN ID: <sup class="required">*</sup></label>
+            <select id='customer_ssn_id' name="customer_ssn_id" required
+                onchange="getCustomerDetails({{ json_customers }})">
+                {% for customer in customers %}
+                <option value="{{ customer }}" selected>{{ customer }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="row">
+            <label for="customer_archived">Customer account status: <sup class="required">*</sup></label>
+            <select id='customer_archived' name="customer_archived" required>
+                <option value="active" selected>Active</option>
+                <option value="inactive">Inactive</option>
+            </select>
+        </div>
+        <div class="row">
+            <label for="customer_id">Customer ID: <sup class="required">*</sup></label>
+            <input id='customer_id' type='text' name='customer_id' required readonly>
+        </div>
+        <div class="row">
+            <label for="customer_name">Customer name: <sup class="required">*</sup></label>
+            <input id='customer_name' type='text' name='customer_name' required>
+        </div>
+        <div class="row">
+            <label for="customer_age">Customer age: <sup class="required">*</sup></label>
+            <input id='customer_age' type='text' name='customer_age' required>
+        </div>
+        <div class="row">
+            <label for="customer_address">Customer address: <sup class="required">*</sup></label>
+            <input id='customer_address' type='text' name='customer_address' required>
+        </div>
+        <div class="row">
+            <label for="customer_state">Customer state: <sup class="required">*</sup></label>
+            <input id='customer_state' type='text' name='customer_state' required>
+        </div>
+        <div class="row">
+            <label for="customer_city">Customer city: <sup class="required">*</sup></label>
+            <input id='customer_city' type='text' name='customer_city' required>
+        </div>
+        <div class="row row-center">
+            <input type="submit" value="Update">
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+<script>
+    function getCustomerDetails(customers) {
+        const ssn_id = document.getElementById('customer_ssn_id');
+
+        const cust_arch = document.getElementById('customer_archived');
+        const cust_id = document.getElementById('customer_id');
+        const cust_name = document.getElementById('customer_name');
+        const cust_age = document.getElementById('customer_age');
+        const cust_addr = document.getElementById('customer_address');
+        const cust_state = document.getElementById('customer_state');
+        const cust_city = document.getElementById('customer_city');
+
+        const customer = customers[ssn_id.value];
+        console.log(customers, ssn_id.value, customer)
+
+        cust_arch.options.selectedIndex = 0;
+        if (customer.archived == true) {
+            cust_arch.options.selectedIndex = 1;
+        }
+
+        cust_id.value = customer['customer_id'];
+        cust_name.value = customer['customer_name'];
+        cust_age.value = customer['customer_age'];
+        cust_addr.value = customer['customer_address'];
+        cust_state.value = customer['customer_state'];
+        cust_city.value = customer['customer_city'];
+    }
+</script>
+{% endblock %}

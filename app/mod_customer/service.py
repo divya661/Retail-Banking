@@ -44,6 +44,7 @@ def create_customer(form):
 def get_all_customers():
     return Customer.query.filter_by().all()
 
+
 def get_all_active_accounts():
     acc_mappings = {}
     for customer in Customer.query.filter_by(archived=False).all():
@@ -57,6 +58,23 @@ def get_all_active_accounts():
         }
 
     return acc_mappings
+
+
+def get_all_active_inactive_accounts():
+    acc_mappings = {}
+    for customer in Customer.query.filter_by().all():
+        acc_mappings[customer.customer_ssn_id] = {
+            'customer_id': customer.customer_id,
+            'customer_name': customer.customer_name,
+            'customer_age': customer.customer_age,
+            'customer_address': customer.customer_address,
+            'customer_state': customer.customer_state,
+            'customer_city': customer.customer_city,
+            'archived': customer.archived,
+        }
+
+    return acc_mappings
+
 
 def get_customer_by_id(customer_id):
     return Customer.query.filter_by(customer_id=customer_id).first()
@@ -88,6 +106,7 @@ def delete_customer(form):
     db.session.commit()
     db.session.flush()
 
+
 def search_customer(form):
     '''
 
@@ -115,4 +134,46 @@ def search_customer(form):
     elif (customer_id) and (customer_search_by_id is None):
         raise InvalidId(customer_id)
 
+
+def edit_customer(form):
+    '''
+      Edit a customer
+    '''
+    customer_ssn_id = str(form['customer_ssn_id'])
+    customer_id = form['customer_id']
+    customer_archived = form['customer_archived']
+    customer_name = form['customer_name']
+    customer_age = form['customer_age']
+    customer_address = form['customer_address']
+    customer_state = form['customer_state']
+    customer_city = form['customer_city']
+
+    customer_exists = Customer.query.filter_by(
+        customer_ssn_id=customer_ssn_id,
+        customer_id=customer_id,
+    ).first()
+
+    if customer_exists is None:
+        raise CustomerDoesNotExist(customer_ssn_id, customer_id)
+
+    customer_exists.customer_name = customer_name
+    customer_exists.customer_age = customer_age
+    customer_exists.customer_address = customer_address
+    customer_exists.customer_state = customer_state
+    customer_exists.customer_city = customer_city
+
+    print(customer_archived)
+    if customer_exists.archived == False and customer_archived == 'inactive':
+        customer_exists.archive_customer()
+        customer_exists.customer_status = STATUS_ARCHIVED
+        customer_exists.customer_message = MESSAGES['CUST_DELETED']
+    elif customer_exists.archived == True and customer_archived == 'active':
+        customer_exists.unarchive_customer()
+        customer_exists.customer_status = STATUS_ACTIVE
+        customer_exists.customer_message = MESSAGES['CUST_REACTIVATE']
+    else:
+        customer_exists.customer_message = MESSAGES['CUST_UPDATED']
+
+    db.session.commit()
+    db.session.flush()
 

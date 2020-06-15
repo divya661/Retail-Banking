@@ -3,7 +3,9 @@ from flask import Blueprint, render_template, request, flash, session, url_for, 
 from .exceptions import InvalidSSNId, CustomerDoesNotExist, InvalidId
 from .forms import CustomerForm
 from .models import Customer
-from .service import create_customer, get_all_customers, get_customer_by_id, delete_customer, get_all_active_accounts, search_customer
+
+from .service import create_customer, get_all_customers, get_customer_by_id, delete_customer, get_all_active_accounts, get_all_active_inactive_accounts, edit_customer,search_customer
+
 
 bp_customer = Blueprint(
     'customer', __name__, template_folder='templates', static_folder='static'
@@ -45,6 +47,7 @@ def delete():
     customers_mappings = get_all_active_accounts()
     return render_template('delete_customer.html', customers=customers_mappings, json_customers=json.dumps(customers_mappings))
 
+
 @bp_customer.route('/search',methods=['GET','POST'])
 def search():
     if request.method == 'POST':
@@ -56,3 +59,15 @@ def search():
         except InvalidId as invalid_id:
             flash(invalid_id.message,'error')
     return render_template("customer_search.html")
+
+@bp_customer.route('/edit', methods=['GET', 'POST'])
+def edit():
+    if request.method == 'POST':
+        try:
+            edit_customer(request.form)
+            flash('Customer account updated successfully', 'success')
+        except CustomerDoesNotExist as customer_does_not_exist:
+            flash(customer_does_not_exist.message, 'error')
+    customers_mappings = get_all_active_inactive_accounts()
+    return render_template('edit_customer.html', customers=customers_mappings, json_customers=json.dumps(customers_mappings))
+
