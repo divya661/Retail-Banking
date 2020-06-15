@@ -8,9 +8,9 @@ STATUS_ACTIVE = 'active'
 STATUS_DELETED = 'deleted'
 
 MESSAGES = {
-    'ACC_CREATION_COMPLETE': '“Account creation initiated successfully',
+    'ACC_CREATION_COMPLETE': 'Account creation complete',
     'ACC_ALREADY_EXISTS': 'Customer already has account of specified type',
-    'ACC_DELETED': 'Account deletion initiated successfully',
+    'ACC_DELETED': 'Account deleted',
 }
 
 
