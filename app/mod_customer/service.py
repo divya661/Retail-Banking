@@ -1,6 +1,6 @@
 from app import db
 from .models import Customer
-from .exceptions import InvalidSSNId, CustomerDoesNotExist
+from .exceptions import InvalidSSNId, CustomerDoesNotExist, InvalidId
 from datetime import datetime
 
 STATUS_ACTIVE = 'active'
@@ -87,3 +87,32 @@ def delete_customer(form):
 
     db.session.commit()
     db.session.flush()
+
+def search_customer(form):
+    '''
+
+    :param form:
+    customer_id
+    customer_ssn_id
+    :return:
+    message of success/ failure
+    '''
+    customer_ssn_id = form.get('customer_ssn_id', '')
+    customer_id = form.get('customer_id', '')
+
+    customer_search_by_ssn_id = Customer.query.filter_by(
+        customer_ssn_id=customer_ssn_id
+    ).first()
+
+    customer_search_by_id = Customer.query.filter_by(
+        customer_id=customer_id
+    ).first()
+
+
+    # If customer_ssn_id entered in form but doesn't present in the database
+    if (customer_ssn_id) and (customer_search_by_ssn_id is None):
+        raise InvalidSSNId(customer_ssn_id)
+    elif (customer_id) and (customer_search_by_id is None):
+        raise InvalidId(customer_id)
+
+

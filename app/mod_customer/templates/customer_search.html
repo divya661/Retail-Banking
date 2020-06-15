@@ -1,0 +1,67 @@
+{% extends "common/layout.html" %}
+
+{% block title %}
+Delete customer
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('customer.static', filename='css/create_customer.css')}}">
+{% endblock %}
+
+{% block onload %}
+getCustomerDetails({{ json_customers }})
+{% endblock %}
+
+{%block content%}
+
+<h2 style="text-align: center; padding: 2rem;">Search customer</h2>
+<div class="container centered">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul class="flashes">
+        {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    <form action="{{ url_for('customer.search') }}" method="post">
+        <div class="row">
+            <label for="customer_ssn_id">Customer SSN ID: <sup class="required">*</sup></label>
+            <input id='customer_ssn_id' name="customer_ssn_id" required>
+        </div>
+        <br>
+        <div>OR</div>
+        <br>
+        <div class="row">
+            <label for="customer_id">Customer ID: <sup class="required">*</sup></label>
+            <input id='customer_id' type='text' name='customer_id' required>
+        </div>
+
+        <div class="row row-center">
+            <input type="submit" value="Search" class="button btn">
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+
+
+{% block js %}
+<script>
+
+
+//   To allow user to enter submit the form by entering value in any
+//one of the fields required.
+
+    jQuery(function ($) {
+    var $inputs = $('input[name=customer_id],input[name=customer_ssn_id]');
+    $inputs.on('input', function () {
+        // Set the required property of the other input to false if this input is not empty.
+        $inputs.not(this).prop('required', !$(this).val().length);
+    });
+});
+
+</script>
+{% endblock %}
+

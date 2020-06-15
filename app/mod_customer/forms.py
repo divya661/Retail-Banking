@@ -12,12 +12,6 @@ class CustomerForm(Form):
     customer_city = SelectField("City",choices=[('H', 'Hapur'), ('M', 'morababad'),('F','faridabad'),('Hy','hyderabad')])
     submit = SubmitField("Submit")
 
- #   def validate_ssn_id(self, customer_ssn_id):
- #       ssn_id = Customer.query.filter_by(customer_ssn_id=customer_ssn_id).first()
- #       if ssn_id:
- #           raise ValidationError("The customer account with the SSN ID entered already exists")
-
-
 
 
 
