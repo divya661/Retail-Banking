@@ -2,7 +2,7 @@ import json
 from flask import Blueprint, render_template, request, flash, session, url_for, redirect
 from flask_sqlalchemy import sqlalchemy
 from .service import create_customer_account, get_all_accounts, delete_customer_account, get_all_account_status
-from .exceptions import InvalidAccountType, NoSuchAccount, AccountAlreadyExists
+from .exceptions import InvalidAccountType, NoSuchAccount, AccountAlreadyExists, CustomerDoesNotExist
 
 bp_account = Blueprint(
     'account', __name__, template_folder='templates', static_folder='static'
@@ -20,6 +20,8 @@ def create_account():
             account = create_customer_account(
                 customer_id, account_type, account_balance)
             flash('Account creation initiated successfully', 'success')
+        except CustomerDoesNotExist as customer_does_not_exist:
+            flash(customer_does_not_exist.message, 'error')
         except AccountAlreadyExists as account_already_exists:
             flash(account_already_exists.message, 'error')
         except InvalidAccountType as invalid_account_type:
@@ -35,7 +37,6 @@ def create_account():
 
 @bp_account.route('/delete', methods=['GET', 'POST'])
 def delete_account():
-    all_accounts = get_all_accounts()
     if request.method == 'POST':
         account_id = request.form.get('account_id', False)
         account_type = request.form.get('account_type', False)
@@ -47,6 +48,7 @@ def delete_account():
         except ValueError as value_error:
             flash(str(value_error), 'error')
 
+    all_accounts = get_all_accounts()
     return render_template('delete_account.html', account_pair=all_accounts, account_pair_json=json.dumps(all_accounts))
 
 
