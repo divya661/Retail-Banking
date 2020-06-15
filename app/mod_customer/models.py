@@ -53,6 +53,9 @@ class Customer(db.Model):
     customer_message = db.Column(
         db.String(30), nullable=True
     )
+    archived = db.Column(
+        db.Boolean, nullable=False, default=False,
+    )
 
     def __init__(self, customer_ssn_id, customer_name, customer_age, customer_address, customer_state, customer_city, customer_status, customer_message):
         self.customer_ssn_id = customer_ssn_id
@@ -63,10 +66,17 @@ class Customer(db.Model):
         self.customer_city = customer_city
         self.customer_status = customer_status
         self.customer_message = customer_message
+        self.archived = False
         self.update_timestamp()
 
     def update_timestamp(self):
         self.customer_last_updated = datetime.utcnow()
+
+    def archive_customer(self):
+        self.archived = True
+    
+    def unarchive_customer(self):
+        self.archived = False
 
     def __repr__(self):
         return "Customer('{cust_ssn}','{cust_name}','{cust_age}','{cust_addr}','{cust_state}','{cust_city}')".format(cust_ssn=self.customer_ssn_id, cust_name=self.customer_name, cust_age=self.customer_age, cust_addr=self.customer_address, cust_state=self.customer_state, cust_city=self.customer_city)
