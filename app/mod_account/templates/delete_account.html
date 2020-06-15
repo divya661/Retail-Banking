@@ -1,7 +1,7 @@
 {% extends "common/layout.html" %}
 
 {% block title %}
-Home - Create Customer
+Delete account
 {% endblock %}
 
 {% block css %}
@@ -47,7 +47,6 @@ getAccountType({{ account_pair_json }})
 
 
 {% block js %}
-<script src="{{url_for('customer.static', filename='js/create_customer.js')}}"></script>
 <script>
     function getAccountType(account_pair_json) {
         const select_box = document.getElementById('account_id');
