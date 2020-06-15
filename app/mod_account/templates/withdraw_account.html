@@ -1,0 +1,50 @@
+{% extends "common/layout.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('customer.static', filename='css/create_customer.css')}}">
+{% endblock %}
+
+{% block title %}
+Withdraw money
+{% endblock %}
+
+{%block content%}
+
+<h2 style="text-align: center; padding: 2rem;">Withdraw Money</h2>
+<div class="container centered">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul class="flashes">
+        {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    <form action="" method="post">
+        <div class="row">
+            <label for="customer_id">Customer ID:</label>
+            <input value="{{account_details.customer_id}}" type="text" id='customer_id' name="customer_id" readonly disabled> 
+        </div>
+        <div class="row">
+            <label for="account_id">Account ID:</label>
+            <input value="{{account_details.account_id}}" type="text" id='account_id' name="account_id" readonly disabled> 
+        </div>
+        <div class="row">
+            <label for="account_type">Account Type:</label>
+            <input value="{{account_details.account_type}}" type="text" id='account_type' name="account_type" readonly disabled> 
+        </div>
+        <div class="row">
+            <label for="balance">Balance:</label>
+            <input value="{{account_details.account_balance}}" type="text" id='balance' name="balance" readonly disabled> 
+        </div>
+        <div class="row">
+            <label for="withdraw_amount">Withdraw Amount: <sup class="required">*</sup></label>
+            <input type="text" id='withdraw_amount' name="withdraw_amount" required> 
+        </div>
+        <div class="row row-center">
+            <input type="submit" value="Deposit">
+        </div>
+    </form>
+</div>
+{% endblock %}

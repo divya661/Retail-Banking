@@ -1,8 +1,8 @@
 import json
 from flask import Blueprint, render_template, request, flash, session, url_for, redirect
 from flask_sqlalchemy import sqlalchemy
-from .service import create_customer_account, get_all_accounts, delete_customer_account, get_all_account_status
-from .exceptions import InvalidAccountType, NoSuchAccount, AccountAlreadyExists, CustomerDoesNotExist
+from .service import create_customer_account, get_all_accounts, delete_customer_account, get_all_account_status, withdraw_from_account, get_account_by_id, deposit_to_account
+from .exceptions import InvalidAccountType, NoSuchAccount, AccountAlreadyExists, CustomerDoesNotExist, InsufficientBalance
 
 bp_account = Blueprint(
     'account', __name__, template_folder='templates', static_folder='static'
@@ -57,3 +57,39 @@ def show_status():
     all_statuses = get_all_account_status()
     print(all_statuses)
     return render_template('account_status.html', all_statuses=all_statuses)
+
+
+@bp_account.route('/withdraw/<account_id>', methods=['GET', 'POST'])
+def withdraw(account_id):
+    if request.method == 'POST':
+        withdraw_amount = int(request.form.get('withdraw_amount', 0))
+        try:
+            withdraw_from_account(account_id, withdraw_amount)
+            flash('Amount withdrawn successfully', 'success')
+        except NoSuchAccount as no_such_account:
+            flash(no_such_account.message, 'error')
+        except InsufficientBalance as insufficient_balance:
+            flash(insufficient_balance.message, 'error')
+        except ValueError as value_error:
+            flash(str(value_error), 'error')
+
+    account_details = get_account_by_id(account_id)
+    return render_template('withdraw_account.html', account_details=account_details)
+
+
+@bp_account.route('/deposit/<account_id>', methods=['GET', 'POST'])
+def deposit(account_id):
+    if request.method == 'POST':
+        deposit_amount = int(request.form.get('deposit_amount', 0))
+        try:
+            deposit_to_account(account_id, deposit_amount)
+            flash('Amount deposited successfully', 'success')
+        except NoSuchAccount as no_such_account:
+            flash(no_such_account.message, 'error')
+        except InsufficientBalance as insufficient_balance:
+            flash(insufficient_balance.message, 'error')
+        except ValueError as value_error:
+            flash(str(value_error), 'error')
+
+    account_details = get_account_by_id(account_id)
+    return render_template('deposit_account.html', account_details=account_details)

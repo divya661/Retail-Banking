@@ -1,7 +1,7 @@
 from app import db
 from app.mod_customer import Customer
 from .models import Account, AccountStatus
-from .exceptions import NoSuchAccount, AccountAlreadyExists, CustomerDoesNotExist
+from .exceptions import NoSuchAccount, AccountAlreadyExists, CustomerDoesNotExist, InsufficientBalance
 
 STATUS_PENDING = 'pending'
 STATUS_ACTIVE = 'active'
@@ -139,3 +139,52 @@ def get_all_account_status():
             )
         )
     return status_array
+
+
+def get_account_by_id(account_id):
+    return Account.query.filter_by(
+        account_id=account_id).first()
+
+
+def withdraw_from_account(account_id, amount):
+    if amount < 0:
+        raise ValueError('Withdraw amount cannot be less than zero')
+    
+    account_exists = Account.query.filter_by(
+        account_id=account_id).first()
+
+    if account_exists is None:
+        raise NoSuchAccount(account_id, None)
+
+    if account_exists.account_balance < amount:
+        raise InsufficientBalance(account_id)
+
+    account_exists.account_balance -= amount
+
+    db.session.commit()
+    db.session.flush()
+
+    update_account_status(account_id, account_exists.customer_id,
+                          account_exists.account_type, None, 'Amount withdrawn successfully')
+
+
+def deposit_to_account(account_id, amount):
+    if amount < 0:
+        raise ValueError('Deposit amount cannot be less than zero')
+
+    account_exists = Account.query.filter_by(
+        account_id=account_id).first()
+
+    if account_exists is None:
+        raise NoSuchAccount(account_id, None)
+
+    if account_exists.account_balance < amount:
+        raise InsufficientBalance(account_id)
+
+    account_exists.account_balance += amount
+
+    db.session.commit()
+    db.session.flush()
+
+    update_account_status(account_id, account_exists.customer_id,
+                          account_exists.account_type, None, 'Amount deposited successfully')

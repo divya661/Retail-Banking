@@ -19,8 +19,12 @@ class NoSuchAccount(Exception):
     def __init__(self, account_id, account_type):
         self.account_id = account_id
         self.account_type = account_type
-        self.message = 'Account with ID {account_id} and type {account_type} does not exist'.format(
-            account_id=self.account_id, account_type=self.account_type)
+        if self.account_type is not None:
+            self.message = 'Account with ID {account_id} and type {account_type} does not exist'.format(
+                account_id=self.account_id, account_type=self.account_type)
+        else:
+            self.message = 'Account with ID {account_id} does not exist'.format(
+                account_id=self.account_id)
         super().__init__(self.message)
 
 
@@ -46,4 +50,15 @@ class CustomerDoesNotExist(Exception):
         self.customer_id = customer_id
         self.message = 'customer with ID {id} does not exist'.format(
             id=self.customer_id)
+        super().__init__(self.message)
+
+
+class InsufficientBalance(Exception):
+    '''
+    Exception raised when there is insufficient balance in specified acc
+    '''
+
+    def __init__(self, account_id):
+        self.message = 'Insufficient balance in account {account_id}'.format(
+            account_id=account_id)
         super().__init__(self.message)
