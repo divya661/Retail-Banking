@@ -1,8 +1,9 @@
+import json
 from flask import Blueprint, render_template, request, flash, session, url_for, redirect
-from .exceptions import InvalidSSNId
+from .exceptions import InvalidSSNId, CustomerDoesNotExist
 from .forms import CustomerForm
 from .models import Customer
-from .service import create_customer, get_all_customers, get_customer_by_id
+from .service import create_customer, get_all_customers, get_customer_by_id, delete_customer, get_all_active_accounts
 
 bp_customer = Blueprint(
     'customer', __name__, template_folder='templates', static_folder='static'
@@ -30,3 +31,17 @@ def status():
 @bp_customer.route('customer/status/<string:customer_id>', methods=['GET'])
 def details(customer_id):
     return render_template("customer_details.html", detail=get_customer_by_id(customer_id))
+
+
+@bp_customer.route('/delete', methods=['GET', 'POST'])
+def delete():
+    if request.method == 'POST':
+        try:
+            delete_customer(request.form)
+            flash('Customer account deactivated successfully', 'success')
+        except CustomerDoesNotExist as customer_does_not_exist:
+            flash(customer_does_not_exist.message, 'error')
+
+    customers_mappings = get_all_active_accounts()
+    return render_template('delete_customer.html', customers=customers_mappings, json_customers=json.dumps(customers_mappings))
+
