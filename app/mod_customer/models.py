@@ -3,6 +3,14 @@ import string
 from datetime import datetime
 from app import db
 
+'''
+ To select city accrding to each state
+'''
+class City(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    state = db.Column(db.String(40))
+    name = db.Column(db.String(50))
+
 
 def random_nine_digit_id():
     charset = string.digits

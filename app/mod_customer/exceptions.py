@@ -31,4 +31,3 @@ class CustomerDoesNotExist(Exception):
         self.customer_id = customer_id
         self.message = 'customer with SSN ID {ssn} and ID {id} does not exist'.format(ssn=self.customer_ssn_id, id=self.customer_id)
         super().__init__(self.message)
-

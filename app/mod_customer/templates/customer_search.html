@@ -5,11 +5,11 @@ Delete customer
 {% endblock %}
 
 {% block css %}
-<link rel="stylesheet" href="{{url_for('customer.static', filename='css/create_customer.css')}}">
+<link rel="stylesheet" href="{{url_for('customer.static', filename='css/search_customer.css')}}">
 {% endblock %}
 
 {% block onload %}
-getCustomerDetails({{ json_customers }})
+
 {% endblock %}
 
 {%block content%}
@@ -25,22 +25,12 @@ getCustomerDetails({{ json_customers }})
     </ul>
     {% endif %}
     {% endwith %}
-    <form action="{{ url_for('customer.search') }}" method="post">
-        <div class="row">
-            <label for="customer_ssn_id">Customer SSN ID: <sup class="required">*</sup></label>
-            <input id='customer_ssn_id' name="customer_ssn_id" required>
-        </div>
-        <br>
-        <div>OR</div>
-        <br>
-        <div class="row">
-            <label for="customer_id">Customer ID: <sup class="required">*</sup></label>
-            <input id='customer_id' type='text' name='customer_id' required>
-        </div>
+    <form action="" method="post" id="form1" onsubmit="fillselect();return false;">
+      {{form.customer_id}}
+        {{form.customer_ssn_id}}
+        {{form.account_id}}
+        {{form.submit}}
 
-        <div class="row row-center">
-            <input type="submit" value="Search" class="button btn">
-        </div>
     </form>
 </div>
 
@@ -62,6 +52,25 @@ getCustomerDetails({{ json_customers }})
     });
 });
 
+
+
+   account_id.onPressEnter =function(){
+
+    let account_id_select = document.getElementById('account_id')
+
+       fetch('/customer/search/account/'+customer_id).then(function(response){
+            console.log(customer_id);
+           response.json().then(function(data){
+           let optionHTML = '';
+           for (let account of data.accountId){
+           optionHTML += '<option value=""'+account.accountId+'">'+account.accountId+'</option>';
+           }
+
+           account_id_select.innerHTML = optionHTML;
+              console.table(data);
+           });
+           });
+   }
 </script>
 {% endblock %}
 

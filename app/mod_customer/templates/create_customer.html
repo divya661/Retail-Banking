@@ -75,7 +75,7 @@ Home - Create Customer
         <div class="col-25">
           {{ form.customer_state.label }}
         </div>
-        <div class="col-75">
+        <div class="col-75" id="state">
           {{form.customer_state }}
 
 
@@ -88,7 +88,7 @@ Home - Create Customer
         <div class="col-25">
           {{ form.customer_city.label }}
         </div>
-        <div class="col-75">
+        <div class="col-75" id="city">
           {{form.customer_city }}
 
           {% for error in form.customer_city.errors %}
@@ -117,5 +117,23 @@ Home - Create Customer
 
 
 {% block js %}
-<script src="{{url_for('customer.static', filename='js/create_customer.js')}}"></script>
+<script>
+ let state_select = document.getElementById('customer_state')
+   let city_select = document.getElementById('customer_city')
+   state_select.onchange = function(){
+       state = state_select.value;
+       fetch('/customer/city/'+state).then(function(response){
+
+           response.json().then(function(data){
+           let optionHTML = '';
+           for (let city of data.cities){
+           optionHTML += '<option value=""'+city.id+'">'+city.name+'</option>';
+           }
+
+           city_select.innerHTML = optionHTML;
+              console.table(data);
+           });
+           });
+   }
+</script>
 {% endblock %}
