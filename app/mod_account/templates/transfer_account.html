@@ -1,0 +1,78 @@
+{% extends "common/layout.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('customer.static', filename='css/create_customer.css')}}">
+{% endblock %}
+
+{% block title %}
+Transfer money
+{% endblock %}
+
+{% block onload %}
+populate_balance({{ account_balance_pairs_json }})
+{% endblock %}
+
+{%block content%}
+
+<h2 style="text-align: center; padding: 2rem;">Transfer Money</h2>
+<div class="container centered">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul class="flashes">
+        {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    <form action="" method="post">
+        <section>
+            <div class="row">
+                <label for="account_id">Source account:</label>
+                <input value="{{source_account}}" type="text" id='account_id' name="account_id" readonly disabled>
+            </div>
+            <div class="row">
+                <label for="src_account_balance">Account balance:</label>
+                <input type="text" id='src_account_balance' name="src_account_balance" readonly disabled>
+            </div>
+            <div class="row">
+                <label for="transfer_amount">Transfer amount:</label>
+                <input type="number" id='transfer_amount' name="transfer_amount">
+            </div>
+        </section>
+        <section>
+            <div class="row">
+                <label for="dest_account">Destination account:</label>
+                <select id='dest_account' name="dest_account" onchange="populate_balance({{ account_balance_pairs_json }})">
+                    {% for key in account_balance_pairs %}
+                    <option value="{{key}}" selected>{{key}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="row">
+                <label for="dst_account_balance">Account balance:</label>
+                <input type="text" id='dst_account_balance' name="dst_account_balance" readonly disabled>
+            </div>
+        </section>
+
+        <div class="row row-center">
+            <input type="submit" value="Transfer">
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    function populate_balance(data) {
+        const src_acc = document.getElementById('account_id');
+        const dst_acc = document.getElementById('dest_account');
+
+        const src_bal = data[src_acc.value];
+        const dst_bal = data[dst_acc.value];
+
+        document.getElementById('src_account_balance').value = src_bal;
+        document.getElementById('dst_account_balance').value = dst_bal;
+    }
+</script>
+{% endblock %}

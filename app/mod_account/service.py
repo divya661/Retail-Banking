@@ -1,6 +1,6 @@
 from app import db
 from app.mod_customer import Customer
-from .models import Account, AccountStatus
+from .models import Account, AccountStatus, Transaction
 from .exceptions import NoSuchAccount, AccountAlreadyExists, CustomerDoesNotExist, InsufficientBalance
 
 STATUS_PENDING = 'pending'
@@ -149,7 +149,7 @@ def get_account_by_id(account_id):
 def withdraw_from_account(account_id, amount):
     if amount < 0:
         raise ValueError('Withdraw amount cannot be less than zero')
-    
+
     account_exists = Account.query.filter_by(
         account_id=account_id).first()
 
@@ -160,12 +160,14 @@ def withdraw_from_account(account_id, amount):
         raise InsufficientBalance(account_id)
 
     account_exists.account_balance -= amount
+    transaction = Transaction(account_id, 'withdraw', amount)
 
+    db.session.add(transaction)
     db.session.commit()
     db.session.flush()
 
     update_account_status(account_id, account_exists.customer_id,
-                          account_exists.account_type, None, 'Amount withdrawn successfully')
+                          account_exists.account_type, STATUS_ACTIVE, 'Amount withdrawn successfully')
 
 
 def deposit_to_account(account_id, amount):
@@ -182,9 +184,58 @@ def deposit_to_account(account_id, amount):
         raise InsufficientBalance(account_id)
 
     account_exists.account_balance += amount
+    transaction = Transaction(account_id, 'deposit', amount)
 
+    db.session.add(transaction)
     db.session.commit()
     db.session.flush()
 
     update_account_status(account_id, account_exists.customer_id,
-                          account_exists.account_type, None, 'Amount deposited successfully')
+                          account_exists.account_type, STATUS_ACTIVE, 'Amount deposited successfully')
+
+
+def get_account_balance_pair():
+    accounts = db.session.query(Account).all()
+    pairs = {}
+    for account in accounts:
+        pairs[account.account_id] = account.account_balance
+    return pairs
+
+
+def transfer_from_account(from_account_id, to_account_id, amount):
+    if amount < 0:
+        raise ValueError('Deposit amount cannot be less than zero')
+    if from_account_id == to_account_id:
+        raise ValueError('Cannot transer money to self')
+
+    from_account = Account.query.filter_by(
+        account_id=from_account_id
+    ).first()
+    to_account = Account.query.filter_by(
+        account_id=to_account_id
+    ).first()
+
+    if from_account is None:
+        raise NoSuchAccount(from_account_id, None)
+    if to_account is None:
+        raise NoSuchAccount(to_account_id, None)
+
+    if amount > from_account.account_balance:
+        raise InsufficientBalance(from_account_id)
+
+    from_account.account_balance -= amount
+    to_account.account_balance += amount
+
+    transaction_from = Transaction(from_account_id, 'transfer', amount)
+    transaction_to = Transaction(to_account_id, 'transfer', amount)
+
+    db.session.add(transaction_from)
+    db.session.add(transaction_to)
+    db.session.commit()
+    db.session.flush()
+
+    update_account_status(from_account_id, from_account.customer_id,
+                          from_account.account_type, STATUS_ACTIVE, 'Amount transferred successfully')
+
+    update_account_status(to_account_id, to_account.customer_id,
+                          to_account.account_type, STATUS_ACTIVE, 'Amount received successfully')

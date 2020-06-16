@@ -82,3 +82,36 @@ class AccountStatus(db.Model):
 
     def update_timestamp(self):
         self.last_updated = datetime.utcnow()
+
+
+class Transaction(db.Model):
+    __tablename__ = 'transaction'
+
+    account_id = db.Column(
+        db.String(20),
+        db.ForeignKey('account.account_id'),
+        nullable=False
+    )
+    transaction_id = db.Column(
+        db.String(20),
+        primary_key=True,
+        default=random_nine_digit_id,
+    )
+    transaction_type = db.Column(
+        db.String(20),
+        nullable=False,
+    )
+    date = db.Column(
+        db.DateTime(),
+        nullable=False,
+        default=datetime.utcnow,
+    )
+    amount = db.Column(
+        db.BigInteger,
+        nullable=False,
+    )
+
+    def __init__(self, account_id, transaction_type, amount):
+        self.account_id = account_id
+        self.transaction_type = transaction_type
+        self.amount = amount

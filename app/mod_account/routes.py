@@ -1,7 +1,7 @@
 import json
 from flask import Blueprint, render_template, request, flash, session, url_for, redirect
 from flask_sqlalchemy import sqlalchemy
-from .service import create_customer_account, get_all_accounts, delete_customer_account, get_all_account_status, withdraw_from_account, get_account_by_id, deposit_to_account
+from .service import create_customer_account, get_all_accounts, delete_customer_account, get_all_account_status, withdraw_from_account, get_account_by_id, deposit_to_account, transfer_from_account, get_account_balance_pair
 from .exceptions import InvalidAccountType, NoSuchAccount, AccountAlreadyExists, CustomerDoesNotExist, InsufficientBalance
 
 bp_account = Blueprint(
@@ -93,3 +93,22 @@ def deposit(account_id):
 
     account_details = get_account_by_id(account_id)
     return render_template('deposit_account.html', account_details=account_details)
+
+
+@bp_account.route('/transfer/<account_id>', methods=['GET', 'POST'])
+def transfer(account_id):
+    if request.method == 'POST':
+        dest_account = request.form.get('dest_account')
+        transfer_amount = int(request.form.get('transfer_amount', 0))
+        try:
+            transfer_from_account(account_id, dest_account, transfer_amount)
+            flash('Amount transferred successfully', 'success')
+        except NoSuchAccount as no_such_account:
+            flash(no_such_account.message, 'error')
+        except InsufficientBalance as insufficient_balance:
+            flash(insufficient_balance.message, 'error')
+        except ValueError as value_error:
+            flash(str(value_error), 'error')
+
+    account_balance_pairs = get_account_balance_pair()
+    return render_template('transfer_account.html', source_account=account_id, account_balance_pairs=account_balance_pairs, account_balance_pairs_json=json.dumps(account_balance_pairs))
