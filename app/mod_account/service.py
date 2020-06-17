@@ -180,9 +180,6 @@ def deposit_to_account(account_id, amount):
     if account_exists is None:
         raise NoSuchAccount(account_id, None)
 
-    if account_exists.account_balance < amount:
-        raise InsufficientBalance(account_id)
-
     account_exists.account_balance += amount
     transaction = Transaction(account_id, 'deposit', amount)
 

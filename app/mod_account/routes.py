@@ -86,8 +86,6 @@ def deposit(account_id):
             flash('Amount deposited successfully', 'success')
         except NoSuchAccount as no_such_account:
             flash(no_such_account.message, 'error')
-        except InsufficientBalance as insufficient_balance:
-            flash(insufficient_balance.message, 'error')
         except ValueError as value_error:
             flash(str(value_error), 'error')
 
