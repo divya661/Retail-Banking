@@ -2,6 +2,7 @@ from app import db
 from app.mod_customer import Customer
 from .models import Account, AccountStatus, Transaction
 from .exceptions import NoSuchAccount, AccountAlreadyExists, CustomerDoesNotExist, InsufficientBalance
+import sys
 
 STATUS_PENDING = 'pending'
 STATUS_ACTIVE = 'active'
@@ -248,7 +249,7 @@ def get_transactions(acc_id, ntrans, page):
 def get_date_transactions(acc_id,start, end, ntrans, page):
     query = Transaction.query.filter(Transaction.account_id==acc_id,Transaction.date.between(start, end)).order_by(
         Transaction.date.desc()).limit(ntrans).offset(page * ntrans)
-
+    print(query[0])
     return query
 
 
