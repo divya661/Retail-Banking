@@ -51,6 +51,15 @@ Account Statement
 
     <a href="/account/statement/dates/{{acc_id}}?ntrans={{ntrans}}&page={{next}}&start={{start}}&end={{end}}">Next</a>
     <a href="/account/statement/dates/{{acc_id}}?ntrans={{ntrans}}&page={{prev}}&start={{start}}&end={{end}}">Prev</a>
+
+    <button class="button btn btn-warning">
+	     <a href="/account/statement/date/download/report/excel/{{acc_id}}/{{ntrans}}/{{start}}/{{end}}/{{page}}">Download Summary As Excel File</a>
+
+    </button>
+       <button class="button btn btn-warning">
+	     <a href="/account/statement/date/download/report/pdf/{{acc_id}}/{{ntrans}}/{{start}}/{{end}}/{{page}}">Download Summary As PDF</a>
+
+    </button>
     {% endif %}
 </div>
 {% endblock %}

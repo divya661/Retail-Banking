@@ -1,8 +1,10 @@
 import json
-from flask import Blueprint, render_template, request, flash, session, url_for, redirect
+from flask import Blueprint, render_template, request, flash, session, url_for, redirect, Response
 from flask_sqlalchemy import sqlalchemy
-from .service import create_customer_account, get_all_accounts, delete_customer_account, get_all_account_status, withdraw_from_account, get_account_by_id, deposit_to_account, transfer_from_account, get_account_balance_pair, get_transactions, get_date_transactions, search_accounts
+from .service import create_customer_account, get_all_accounts, delete_customer_account, get_all_account_status, withdraw_from_account, get_account_by_id, deposit_to_account, transfer_from_account, get_account_balance_pair, get_transactions, get_date_transactions, search_accounts, get_statement_detail_of_account
 from .exceptions import InvalidAccountType, NoSuchAccount, AccountAlreadyExists, CustomerDoesNotExist, InsufficientBalance
+import os, xlwt, io, sys
+from fpdf import FPDF
 
 bp_account = Blueprint(
     'account', __name__, template_folder='templates', static_folder='static'
@@ -121,9 +123,7 @@ def statement_ntrans(acc_id):
         page = 0
 
     transactions = get_transactions(acc_id, ntrans, page)
-
     return render_template('statement_ntrans.html', ntrans=ntrans, page=page, acc_id=acc_id, transactions=transactions)
-
 
 @bp_account.route('/statement/dates/<acc_id>', methods=['GET'])
 def statement_dates(acc_id):
@@ -137,9 +137,10 @@ def statement_dates(acc_id):
         page = 0
 
     if start is not None and end is not None:
-        transactions = get_date_transactions(start, end, ntrans, page)
+        transactions = get_date_transactions(acc_id,start, end, ntrans, page)
 
     return render_template('statement_dates.html', ntrans=ntrans, page=page, acc_id=acc_id, transactions=transactions, start=start, end=end)
+
 
 
 @bp_account.route('/statement', methods=['GET', 'POSt'])
@@ -174,3 +175,167 @@ def account_details():
             flash(str(value_error), 'error')
 
     return render_template('account_details.html')
+
+
+@bp_account.route('/statement/ntrans/download/report/pdf/<string:acc_id>/<int:ntrans>/<int:page>')
+def download_report_as_pdf(acc_id,ntrans,page):
+    try:
+        transactions = get_transactions(acc_id, ntrans, page)
+
+        pdf = FPDF()
+        pdf.add_page()
+
+        page_width = pdf.w - 2 * pdf.l_margin
+
+        pdf.set_font('Times', 'B', 20.0)
+        pdf.cell(page_width, 0.0, 'Account Statement', align='C')
+        pdf.ln(10)
+
+        pdf.set_font('Courier', '', 12)
+
+        col_width = page_width / 4
+        pdf.ln(1)
+        th = pdf.font_size
+
+        pdf.cell(col_width+2,th,'Transaction Id',border=1)
+        pdf.cell(col_width+2,th,'Transaction Type',border=1)
+        pdf.cell(col_width+2,th,'Date',border=1)
+        pdf.cell(col_width+2,th,'Amount',border=1)
+
+        for row in transactions:
+            pdf.ln(4.5)
+            pdf.cell(col_width + 2, th, row.transaction_id, border=1)
+            pdf.cell(col_width + 2, th, row.transaction_type, border=1)
+            pdf.cell(col_width + 2, th, str(row.date), border=1)
+            pdf.cell(col_width + 2, th, str(row.amount), border=1)
+        pdf.ln(10)
+
+        pdf.set_font('Times', '', 10.0)
+        pdf.cell(page_width, 0.0, '- end of report -', align='C')
+
+
+        return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf',
+                        headers={'Content-Disposition': 'attachment;filename=account-statement.pdf'})
+    except Exception as e:
+        print(e)
+    return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf',
+                        headers={'Content-Disposition': 'attachment;filename=account-statement.pdf'})
+
+@bp_account.route('/statement/date/download/report/pdf/<string:acc_id>/<int:ntrans>/<start>/<end>/<int:page>')
+def download_report_as_pdf_by_date(acc_id,ntrans,start,end,page):
+    try:
+        transactions = get_date_transactions(acc_id,start, end, ntrans, page)
+
+        pdf = FPDF()
+        pdf.add_page()
+
+        page_width = pdf.w - 2 * pdf.l_margin
+
+        pdf.set_font('Times', 'B', 20.0)
+        pdf.cell(page_width, 0.0, 'Account Statement', align='C')
+        pdf.ln(10)
+
+        pdf.set_font('Courier', '', 12)
+
+        col_width = page_width / 4
+        pdf.ln(1)
+        th = pdf.font_size
+
+        pdf.cell(col_width+2,th,'Transaction Id',border=1)
+        pdf.cell(col_width+2,th,'Transaction Type',border=1)
+        pdf.cell(col_width+2,th,'Date',border=1)
+        pdf.cell(col_width+2,th,'Amount',border=1)
+
+        for row in transactions:
+            pdf.ln(4.5)
+            pdf.cell(col_width + 2, th, row.transaction_id, border=1)
+            pdf.cell(col_width + 2, th, row.transaction_type, border=1)
+            pdf.cell(col_width + 2, th, str(row.date), border=1)
+            pdf.cell(col_width + 2, th, str(row.amount), border=1)
+        pdf.ln(10)
+
+        pdf.set_font('Times', '', 10.0)
+        pdf.cell(page_width, 0.0, '- end of report -', align='C')
+
+
+        return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf',
+                        headers={'Content-Disposition': 'attachment;filename=account-statement.pdf'})
+    except Exception as e:
+        print(e)
+    return Response(pdf.output(dest='S').encode('latin-1'), mimetype='application/pdf',
+                        headers={'Content-Disposition': 'attachment;filename=account-statement.pdf'})
+
+
+@bp_account.route('/statement/ntrans/download/report/excel/<string:acc_id>/<int:ntrans>/<int:page>')
+def download_report_as_excel(acc_id,ntrans,page):
+    try:
+        transactions = get_transactions(acc_id, ntrans, page)
+
+
+        # output in bytes
+        output = io.BytesIO()
+        # create WorkBook object
+        workbook = xlwt.Workbook()
+        # add a sheet
+        sh = workbook.add_sheet('Account Statement Report')
+
+        # add headers
+        sh.write(0, 0, 'Transaction Id')
+        sh.write(0, 1, 'Transaction Type')
+        sh.write(0, 2, 'Date')
+        sh.write(0, 3, 'Amount')
+
+        idx = 1
+        for row in transactions:
+            sh.write(idx, 0, str(row.transaction_id))
+            sh.write(idx, 1, str(row.transaction_type))
+            sh.write(idx, 2, str(row.date))
+            sh.write(idx, 3, str(row.amount))
+            idx +=1
+
+
+        workbook.save(output)
+        output.seek(0)
+
+        return Response(output, mimetype="application/ms-excel", headers={"Content-Disposition": "attachment;filename=account_statement.xls"})
+    except Exception as e:
+        print(e)
+    return Response(output, mimetype="application/ms-excel",
+                    headers={"Content-Disposition": "attachment;filename=account_statement.xls"})
+
+
+@bp_account.route('/statement/date/download/report/excel/<string:acc_id>/<int:ntrans>/<start>/<end>/<int:page>')
+def download_report_as_excel_by_date(acc_id,ntrans,start,end,page):
+    try:
+        transactions = get_date_transactions(acc_id,start, end, ntrans, page)
+        # output in bytes
+        output = io.BytesIO()
+        # create WorkBook object
+        workbook = xlwt.Workbook()
+        # add a sheet
+        sh = workbook.add_sheet('Account Statement Report')
+
+        # add headers
+        sh.write(0, 0, 'Transaction Id')
+        sh.write(0, 1, 'Transaction Type')
+        sh.write(0, 2, 'Date')
+        sh.write(0, 3, 'Amount')
+
+        idx = 1
+        for row in transactions:
+            sh.write(idx, 0, str(row.transaction_id))
+            sh.write(idx, 1, str(row.transaction_type))
+            sh.write(idx, 2, str(row.date))
+            sh.write(idx, 3, str(row.amount))
+            idx +=1
+
+
+        workbook.save(output)
+        output.seek(0)
+
+        return Response(output, mimetype="application/ms-excel", headers={"Content-Disposition": "attachment;filename=account_statement.xls"})
+    except Exception as e:
+        print(e)
+    return Response(output, mimetype="application/ms-excel",
+                    headers={"Content-Disposition": "attachment;filename=account_statement.xls"})
+
