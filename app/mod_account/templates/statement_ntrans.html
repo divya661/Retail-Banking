@@ -1,0 +1,41 @@
+{% extends "common/layout.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('customer.static', filename='css/create_customer.css')}}">
+{% endblock %}
+
+{% block title %}
+Account Statement
+{% endblock %}
+
+{%block content%}
+<h2 style="text-align: center; padding: 2rem;">Showing last {{ntrans}} transactions</h2>
+<div class="container centered">
+    <table class='table'>
+        <thead>
+            <th>Transaction ID</th>
+            <th>Account ID</th>
+            <th>Transaction Type</th>
+            <th>Date</th>
+            <th>Amount</th>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{transaction.transaction_id}}</td>
+                <td>{{transaction.account_id}}</td>
+                <td>{{transaction.transaction_type}}</td>
+                <td>{{transaction.date}}</td>
+                <td>{{transaction.amount}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% set next = page+1 %}
+    {% set prev = page-1 %}
+
+    <a href="/account/statement/ntrans/{{acc_id}}?ntrans={{ntrans}}&page={{next}}">Next</a>
+    <a href="/account/statement/ntrans/{{acc_id}}?ntrans={{ntrans}}&page={{prev}}">Prev</a>
+</div>
+{% endblock %}

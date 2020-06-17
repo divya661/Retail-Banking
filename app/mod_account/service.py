@@ -239,3 +239,17 @@ def transfer_from_account(from_account_id, to_account_id, amount):
 
     update_account_status(to_account_id, to_account.customer_id,
                           to_account.account_type, STATUS_ACTIVE, 'Amount received successfully')
+
+
+def get_transactions(acc_id, ntrans, page):
+    query = Transaction.query.filter_by(account_id=acc_id).order_by(
+        Transaction.date.desc()).limit(ntrans).offset(page * ntrans)
+
+    return query
+
+
+def get_date_transactions(start, end, ntrans, page):
+    query = Transaction.query.filter(Transaction.date.between(start, end)).order_by(
+        Transaction.date.desc()).limit(ntrans).offset(page * ntrans)
+
+    return query

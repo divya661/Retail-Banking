@@ -1,7 +1,7 @@
 import json
 from flask import Blueprint, render_template, request, flash, session, url_for, redirect
 from flask_sqlalchemy import sqlalchemy
-from .service import create_customer_account, get_all_accounts, delete_customer_account, get_all_account_status, withdraw_from_account, get_account_by_id, deposit_to_account, transfer_from_account, get_account_balance_pair
+from .service import create_customer_account, get_all_accounts, delete_customer_account, get_all_account_status, withdraw_from_account, get_account_by_id, deposit_to_account, transfer_from_account, get_account_balance_pair, get_transactions, get_date_transactions
 from .exceptions import InvalidAccountType, NoSuchAccount, AccountAlreadyExists, CustomerDoesNotExist, InsufficientBalance
 
 bp_account = Blueprint(
@@ -112,3 +112,53 @@ def transfer(account_id):
 
     account_balance_pairs = get_account_balance_pair()
     return render_template('transfer_account.html', source_account=account_id, account_balance_pairs=account_balance_pairs, account_balance_pairs_json=json.dumps(account_balance_pairs))
+
+
+@bp_account.route('/statement/ntrans/<acc_id>', methods=['GET'])
+def statement_ntrans(acc_id):
+    ntrans = int(request.args.get('ntrans', 4))
+    page = int(request.args.get('page', 0))
+
+    if page < 0:
+        page = 0
+
+    transactions = get_transactions(acc_id, ntrans, page)
+
+    return render_template('statement_ntrans.html', ntrans=ntrans, page=page, acc_id=acc_id, transactions=transactions)
+
+
+@bp_account.route('/statement/dates/<acc_id>', methods=['GET'])
+def statement_dates(acc_id):
+    ntrans = int(request.args.get('ntrans', 4))
+    page = int(request.args.get('page', 0))
+    start = request.args.get('start', None)
+    end = request.args.get('end', None)
+    transactions = None
+
+    if page < 0:
+        page = 0
+
+    if start is not None and end is not None:
+        transactions = get_date_transactions(start, end, ntrans, page)
+
+    return render_template('statement_dates.html', ntrans=ntrans, page=page, acc_id=acc_id, transactions=transactions, start=start, end=end)
+
+
+@bp_account.route('/statement', methods=['GET', 'POSt'])
+def statement():
+    if request.method == 'POST':
+        account_id = request.form['account_id']
+        show = request.form['show']
+        number_transactions = request.form['number_transactions']
+
+        if show == 'last_n_trans':
+            redirect_to = '/account/statement/ntrans/{acc_id}?ntrans={trans}'.format(
+                acc_id=account_id, trans=number_transactions)
+        else:
+            redirect_to = '/account/statement/dates/{acc_id}?ntrans={trans}'.format(
+                acc_id=account_id, trans=number_transactions)
+
+        return redirect(redirect_to)
+
+    account_balance_pairs = get_account_balance_pair()
+    return render_template('account_statement.html', accounts=account_balance_pairs.keys())

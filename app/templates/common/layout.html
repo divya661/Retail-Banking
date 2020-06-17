@@ -62,8 +62,6 @@
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="{{ url_for('customer.status') }}">Customer Status</a>
               <a class="dropdown-item" href="{{ url_for('account.show_status') }}">Account Status</a>
-              <a class="dropdown-item" href="#">Customer Search</a>
-              <a class="dropdown-item" href="#">Account Search</a>
             </div>
           </li>
           <li class="nav-item dropdown">
@@ -72,10 +70,8 @@
               Account Operation
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Withdraw Money</a>
-              <a class="dropdown-item" href="#">Deposit Money</a>
-              <a class="dropdown-item" href="#">Money Transfer</a>
-              <a class="dropdown-item" href="#">Account Statement</a>
+              <a class="dropdown-item" href="#">Account Search</a>
+              <a class="dropdown-item" href="{{ url_for('account.statement') }}">Account Statement</a>
             </div>
           </li>
           <li class="nav-item">
