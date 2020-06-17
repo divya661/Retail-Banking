@@ -25,7 +25,7 @@ populate_balance({{ account_balance_pairs_json }})
     </ul>
     {% endif %}
     {% endwith %}
-    <form action="" method="post">
+    <form action="{{ url_for('account.transfer', account_id=source_account) }}" method="post">
         <section>
             <div class="row">
                 <label for="account_id">Source account:</label>

@@ -1,7 +1,7 @@
 import json
 from flask import Blueprint, render_template, request, flash, session, url_for, redirect
 from flask_sqlalchemy import sqlalchemy
-from .service import create_customer_account, get_all_accounts, delete_customer_account, get_all_account_status, withdraw_from_account, get_account_by_id, deposit_to_account, transfer_from_account, get_account_balance_pair, get_transactions, get_date_transactions
+from .service import create_customer_account, get_all_accounts, delete_customer_account, get_all_account_status, withdraw_from_account, get_account_by_id, deposit_to_account, transfer_from_account, get_account_balance_pair, get_transactions, get_date_transactions, search_accounts
 from .exceptions import InvalidAccountType, NoSuchAccount, AccountAlreadyExists, CustomerDoesNotExist, InsufficientBalance
 
 bp_account = Blueprint(
@@ -162,3 +162,17 @@ def statement():
 
     account_balance_pairs = get_account_balance_pair()
     return render_template('account_statement.html', accounts=account_balance_pairs.keys())
+
+
+@bp_account.route('/details', methods=['GET', 'POST'])
+def account_details():
+    if request.method == 'POST':
+        search = request.form.get('search', None)
+        search_type = request.form.get('type', None)
+        try:
+            accounts = search_accounts(search, search_type)
+            return render_template('account_details.html', accounts=accounts)
+        except ValueError as value_error:
+            flash(str(value_error), 'error')
+
+    return render_template('account_details.html')

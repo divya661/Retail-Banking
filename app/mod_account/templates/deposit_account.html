@@ -21,7 +21,7 @@ Deposit money
     </ul>
     {% endif %}
     {% endwith %}
-    <form action="" method="post">
+    <form action="{{ url_for('account.deposit', account_id=account_details.account_id) }}" method="post">
         <div class="row">
             <label for="customer_id">Customer ID:</label>
             <input value="{{account_details.customer_id}}" type="text" id='customer_id' name="customer_id" readonly disabled> 

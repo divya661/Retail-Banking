@@ -1,0 +1,66 @@
+{% extends "common/layout.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('customer.static', filename='css/create_customer.css')}}">
+{% endblock %}
+
+{% block title %}
+Account Details
+{% endblock %}
+
+{%block content%}
+<h2 style="text-align: center; padding: 2rem;">Account Details</h2>
+<div class="container centered">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul class="flashes">
+        {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    <form action="" method="POST">
+        <div class="row">
+            <label for="search">Search:</label>
+            <input type="text" id='search' name="search">
+            <select name="type">
+                <option value="account_id">Account ID</option>
+                <option value="customer_id">Customer ID</option>
+                <option value="ssn_id">SSN ID</option>
+                <option value="all">All</option>
+            </select>
+        </div>
+        <div class="row row-center">
+            <input type="submit" value="Search">
+        </div>
+    </form>
+
+    {% if accounts %}
+    <table class='table'>
+        <thead>
+            <th>Account ID</th>
+            <th>Customer ID</th>
+            <th>Account Type</th>
+            <th>Account Balance</th>
+            <th>Deposit</th>
+            <th>Withdraw</th>
+            <th>Transfer</th>
+        </thead>
+        <tbody>
+            {% for account in accounts %}
+            <tr>
+                <td>{{account.account_id}}</td>
+                <td>{{account.customer_id}}</td>
+                <td>{{account.account_type}}</td>
+                <td>{{account.account_balance}}</td>
+                <td><a href="{{url_for('account.deposit', account_id=account.account_id)}}">Deposit</a></td>
+                <td><a href="{{url_for('account.withdraw', account_id=account.account_id)}}">Withdraw</a></td>
+                <td><a href="{{url_for('account.transfer', account_id=account.account_id)}}">Transfer</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock %}

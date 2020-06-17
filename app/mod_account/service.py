@@ -253,3 +253,41 @@ def get_date_transactions(start, end, ntrans, page):
         Transaction.date.desc()).limit(ntrans).offset(page * ntrans)
 
     return query
+
+
+def search_by_account_id(account_id):
+    if account_id is None or account_id == '':
+        raise ValueError('Account ID can not be None')
+
+    return [get_account_by_id(account_id)]
+
+
+def search_by_customer_id(customer_id):
+    if customer_id is None or customer_id == '':
+        raise ValueError('Customer ID cannot be None')
+
+    return Account.query.filter_by(
+        customer_id=customer_id)
+
+
+def search_by_ssn_id(ssn_id):
+    if ssn_id is None or ssn_id == '':
+        raise ValueError('SSN ID cannot be None')
+
+    customer = Customer.query.filter_by(customer_ssn_id=ssn_id).first()
+    return search_by_customer_id(customer.customer_id)
+
+
+def search_all_accounts(param):
+    return db.session.query(Account).all()
+
+
+def search_accounts(search, search_type):
+    search_types = {
+        'account_id': search_by_account_id,
+        'customer_id': search_by_customer_id,
+        'ssn_id': search_by_ssn_id,
+        'all': search_all_accounts,
+    }
+
+    return search_types[search_type](search)
