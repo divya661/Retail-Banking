@@ -137,7 +137,7 @@ def statement_dates(acc_id):
         page = 0
 
     if start is not None and end is not None:
-        transactions = get_date_transactions(start, end, ntrans, page)
+        transactions = get_date_transactions(acc_id, start, end, ntrans, page)
 
     return render_template('statement_dates.html', ntrans=ntrans, page=page, acc_id=acc_id, transactions=transactions, start=start, end=end)
 

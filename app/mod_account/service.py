@@ -245,8 +245,8 @@ def get_transactions(acc_id, ntrans, page):
     return query
 
 
-def get_date_transactions(start, end, ntrans, page):
-    query = Transaction.query.filter(Transaction.date.between(start, end)).order_by(
+def get_date_transactions(acc_id, start, end, ntrans, page):
+    query = Transaction.query.filter_by(account_id=acc_id).filter(Transaction.date.between(start, end)).order_by(
         Transaction.date.desc()).limit(ntrans).offset(page * ntrans)
 
     return query
