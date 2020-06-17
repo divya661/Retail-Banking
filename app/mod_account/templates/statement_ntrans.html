@@ -34,15 +34,19 @@ Account Statement
 
     {% set next = page+1 %}
     {% set prev = page-1 %}
-
-    <button class="button btn btn-primary">
+<div class="row">
+    <div class="col-md-5 col-offset-md-1">
+    <button class="button btn ">
 	     <a href="/account/statement/ntrans/download/report/excel/{{acc_id}}/{{ntrans}}/{{page}}">Download Summary As Excel File</a>
-
+</div>
+    <div class="col-md-5">
     </button>
-       <button class="button btn btn-primary">
+       <button class="button btn ">
 	     <a href="/account/statement/ntrans/download/report/pdf/{{acc_id}}/{{ntrans}}/{{page}}">Download Summary As PDF</a>
 
     </button>
+    </div>
+</div>
     <a href="/account/statement/ntrans/{{acc_id}}?ntrans={{ntrans}}&page={{next}}">Next</a>
     <a href="/account/statement/ntrans/{{acc_id}}?ntrans={{ntrans}}&page={{prev}}">Prev</a>
 </div>
