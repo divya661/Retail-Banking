@@ -21,8 +21,10 @@ Home - Create Customer
   </ul>
   {% endif %}
   {% endwith %}
-  <!--{{ form.hidden_tag() }}-->
+
   <form action="" method="post">
+    {{ form.hidden_tag() }}
+    {{form.csrf_token}}
     <fieldset>
       <legend>{{title}}</legend>
       <div class="row">
