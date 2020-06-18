@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, request, flash, session, url_for, 
 from flask_sqlalchemy import sqlalchemy
 from .service import create_customer_account, get_all_accounts, delete_customer_account, get_all_account_status, withdraw_from_account, get_account_by_id, deposit_to_account, transfer_from_account, get_account_balance_pair, get_transactions, get_date_transactions, search_accounts, get_statement_detail_of_account
 from .exceptions import InvalidAccountType, NoSuchAccount, AccountAlreadyExists, CustomerDoesNotExist, InsufficientBalance
+from datetime import datetime, timedelta
 import os, xlwt, io, sys
 from fpdf import FPDF
 
@@ -137,6 +138,7 @@ def statement_dates(acc_id):
         page = 0
 
     if start is not None and end is not None:
+        end = (datetime.strptime(end, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d')
         transactions = get_date_transactions(acc_id, start, end, ntrans, page)
 
     return render_template('statement_dates.html', ntrans=ntrans, page=page, acc_id=acc_id, transactions=transactions, start=start, end=end)
