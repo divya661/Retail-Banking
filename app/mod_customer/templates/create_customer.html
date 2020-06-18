@@ -34,7 +34,7 @@ Home - Create Customer
         <div class="col-75">
           {{ form.customer_ssn_id }}
           {% for error in form.customer_ssn_id.errors %}
-          <span class="error-message">{{ error }}</span>
+          <span class="error-message" style="color:red;">{{ error }}</span>
           {% endfor %}
         </div>
       </div>
@@ -45,7 +45,7 @@ Home - Create Customer
         <div class="col-75">
           {{ form.customer_name }}
           {% for error in form.customer_name.errors %}
-          <span class="error-message">{{ error }}</span>
+          <span class="error-message" style="color:red;">{{ error }}</span>
           {% endfor %}
         </div>
       </div>
@@ -56,7 +56,7 @@ Home - Create Customer
         <div class="col-75">
           {{ form.customer_age }}
           {% for error in form.customer_age.errors %}
-          <span class="error-message">{{ error }}</span>
+          <span class="error-message" style="color:red;">{{ error }}</span>
           {% endfor %}
         </div>
       </div>
@@ -67,7 +67,7 @@ Home - Create Customer
         <div class="col-75">
           {{ form.customer_address }}
           {% for error in form.customer_address.errors %}
-          <span class="error-message">{{ error }}</span>
+          <span class="error-message" style="color:red;">{{ error }}</span>
           {% endfor %}
         </div>
       </div>
@@ -80,7 +80,7 @@ Home - Create Customer
 
 
           {% for error in form.customer_state.errors %}
-          <span class="error-message">{{ error }}</span>
+          <span class="error-message" style="color:red;">{{ error }}</span>
           {% endfor %}
         </div>
       </div>
@@ -92,7 +92,7 @@ Home - Create Customer
           {{form.customer_city }}
 
           {% for error in form.customer_city.errors %}
-          <span class="error-message">{{ error }}</span>
+          <span class="error-message" style="color:red;">{{ error }}</span>
           {% endfor %}
         </div>
       </div>

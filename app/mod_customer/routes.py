@@ -20,7 +20,7 @@ def authenticate():
 @bp_customer.route('/signup', methods=['POST', 'GET'])
 def signup():
     form = CustomerForm()
-    if request.method == 'POST':
+    if request.method == 'POST' and form.validate_on_submit():
         try:
             create_customer(request.form)
             flash("Customer successfully registered!", "success")
