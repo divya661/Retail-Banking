@@ -2,6 +2,6 @@
     "DEBUG": true,
     "DB_USERNAME": "root",
     "DB_PASSWORD": "Password@123",
-    "DB_SERVER": "localhost",
+    "DB_SERVER": "127.0.0.1",
     "DB_DATABASE": "banking_application"
 }

@@ -81,12 +81,15 @@
       </div>
     </nav>
   </div>
+
   </div>
-  <div id='content'>
-    {% block content %}
-    {% endblock %}
+  <div class="flex-container">
+    <div id='content'>
+      {% block content %}
+      {% endblock %}
+    </div>
   </div>
-  <footer class="footer-row">
+  <footer class="footer-row" style="margin: auto auto 0 auto;">
     <div class="row footer-pad">
       <div class="col-5 w50 p-3">
         <div class="footer-title">
@@ -138,8 +141,8 @@
         </div>
 
       </div>
+    </div>
   </footer>
-
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
