@@ -9,6 +9,13 @@ bp_customer = Blueprint(
     'customer', __name__, template_folder='templates', static_folder='static'
 )
 
+@bp_customer.before_request
+def authenticate():
+    employee_id = session.get('employee_id', False)
+    username = session.get('username', False)
+
+    if employee_id == False or username == False:
+        return redirect(url_for('auth.login'))
 
 @bp_customer.route('/signup', methods=['POST', 'GET'])
 def signup():

@@ -11,6 +11,13 @@ bp_account = Blueprint(
     'account', __name__, template_folder='templates', static_folder='static'
 )
 
+@bp_account.before_request
+def authenticate():
+    employee_id = session.get('employee_id', False)
+    username = session.get('username', False)
+
+    if employee_id == False or username == False:
+        return redirect(url_for('auth.login'))
 
 @bp_account.route('/create', methods=['GET', 'POST'])
 def create_account():
